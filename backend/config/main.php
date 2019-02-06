@@ -19,14 +19,14 @@ return [
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'domain'=>'.yii2', 'path'=>'/'],
+            'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'domain'=>'.yii2',],
 
         ],
         'session' => [
 
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced',
-            'savePath'=> __DIR__ . '/../../sessions'
+            //'savePath'=> __DIR__ . '/../../sessions'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
