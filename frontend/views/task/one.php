@@ -65,7 +65,7 @@ use yii\helpers\Html;
             <?=$form->field($taskCommentForm, 'user_id')->hiddenInput(['value' => $userId])->label(false);?>
             <?=$form->field($taskCommentForm, 'task_id')->hiddenInput(['value' => $model->id])->label(false);?>
             <?=$form->field($taskCommentForm, 'comment')->textInput();?>
-            <?=Html::submitButton("Добавить",['class' => 'btn btn-default']);?>
+            <?=Html::submitButton("Добавить",['class' => 'btn btn-default', 'value' => 'add_attachment']);?>
             <?php ActiveForm::end();?>
             <hr>
             <div class="comment-history">
