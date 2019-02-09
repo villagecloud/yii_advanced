@@ -11,6 +11,16 @@ class my_testCest
 
     public function _before(AcceptanceTester $I)
     {
+
+    }
+
+    // tests
+    public function tryToTest(AcceptanceTester $I)
+    {
+
+    }
+
+    public function checkTask(AcceptanceTester $I){
         $I->amOnPage(Url::toRoute(['/task/one', 'id' => 1]));
         $I->wait(1); // wait for page to be opened
         $I->see('My Application');
@@ -23,9 +33,5 @@ class my_testCest
         //$I->click('add_attachment');
     }
 
-    // tests
-    public function tryToTest(AcceptanceTester $I)
-    {
-    }
 }
 //http://front.yii2:8888/index-test.php?r=task%2Fone&id=1

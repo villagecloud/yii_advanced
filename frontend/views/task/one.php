@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\Html;
 
+
 ?>
 
 <div class="tasks-edit">
@@ -77,4 +78,57 @@ use yii\helpers\Html;
         </div>
 
     </div>
+
+
+    <form action="#" name="chat_form" id="chat_form">
+        <label>
+            введите сообщение
+            <input type="text" name="message"/>
+            <input type="submit"/>
+        </label>
+    </form>
+    <hr>
+    <div id="root_chat"></div>
+    <script>
+        if (!window.WebSocket){
+            alert("Ваш браузер неподдерживает веб-сокеты!");
+        }
+
+        var webSocket = new WebSocket("ws://front.yii2:8080?task_chat=<?php echo $model->id ?>");
+
+
+
+/*        var url = 'http://front.yii2:8888/index.php?r=task%2Fone&id=5';
+        var id = url.substring(url.lastIndexOf('&id=') + 1);*/
+        var task_id = '<?php echo $model->id ?>';
+        var room_id = '<?php echo $model->id ?>';
+
+        //alert(id);
+
+        document.getElementById("chat_form")
+            .addEventListener('submit', function(event){
+                var textMessage = this.message.value;
+                var msg =  {
+                    "task_id" : task_id,
+                    "room_id" : room_id,
+                    "message" : textMessage
+                };
+                webSocket.send(JSON.stringify(msg));
+
+
+                //webSocket.send(task_id);
+                event.preventDefault();
+                return false;
+            });
+
+        webSocket.onmessage = function (event) {
+            var data = event.data;
+            var messageContainer = document.createElement('div');
+            var textNode = document.createTextNode(data);
+            messageContainer.appendChild(textNode);
+            document.getElementById("root_chat")
+                .appendChild(messageContainer);
+        };
+    </script>
+
 </div>
