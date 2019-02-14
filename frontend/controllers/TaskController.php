@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Chat;
 use yii\db\Exception;
 use yii\web\ForbiddenHttpException;
 use yii\web\UploadedFile;
@@ -77,7 +78,6 @@ class TaskController extends Controller
     {
         throw New ForbiddenHttpException();
     }*/
-
     return $this->render('one', [
         'model' => Tasks::findOne($id),
         'usersList' => Users::getUsersList(),
@@ -85,6 +85,7 @@ class TaskController extends Controller
         'userId' => Yii::$app->user->id,
         'taskCommentForm' => new Comments(),
         'taskAttachmentForm' => new TaskAttachmentsAddForm(),
+        'chatHistory' => Chat::find()->limit(20)->where(['chat_channel' => $id])->all(),
 
     ]);
 }
@@ -98,7 +99,8 @@ class TaskController extends Controller
         }else {
             \Yii::$app->session->setFlash('error', "Не удалось сохранить изменения");
         }
-        $this->redirect(\Yii::$app->request->referrer);
+        $this->actionOne($id);
+        //$this->redirect(\Yii::$app->request->referrer);
     }
 
     public function actionAddComment()
@@ -107,14 +109,15 @@ class TaskController extends Controller
        /* if(!Yii::$app->user->can('CommentCreate')){
             throw new ForbiddenHttpException();
         }*/
+
         $model = new Comments();
         if($model->load(\Yii::$app->request->post()) && $model->save()){
             \Yii::$app->session->setFlash('success', "Комментарий добавлен");
         }else {
             \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
         }
-        $this->redirect(\Yii::$app->request->referrer);
-
+        $this->actionOne($model->task_id);
+        //$this->redirect(\Yii::$app->request->referrer);
     }
 
     public function actionAddAttachment()

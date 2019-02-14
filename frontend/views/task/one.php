@@ -8,13 +8,18 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\Html;
-
+use yii\widgets\Pjax;
 
 ?>
 
+<?php Pjax::begin(['enablePushState' => false])?>
+
 <div class="tasks-edit">
     <div class="task-main">
-        <?php $form = ActiveForm::begin(['action' => Url::to(['task/save', 'id' => $model->id])]);?>
+        <?php $form = ActiveForm::begin(['action' => Url::to([
+            'task/save', 'id' => $model->id]),
+            'options' => ['data' => ['pjax' => true]],
+            ]);?>
         <?=$form->field($model, 'title')->textInput();?>
         <div class="row">
             <div class="col-lg-4">
@@ -38,12 +43,13 @@ use yii\helpers\Html;
         <?php ActiveForm::end();?>
     </div>
 </div>
+<?php Pjax::end()?>
 
 <div class="attachments">
     <h3>Вложения</h3>
     <?php $form = ActiveForm::begin([
         'action' => Url::to(['task/add-attachment']),
-        'options' => ['class' => "form-inline"]
+        'options' => ['class' => "form-inline"],
     ]);?>
     <?=$form->field($taskAttachmentForm, 'taskId')->hiddenInput(['value' => $model->id])->label(false);?>
     <?=$form->field($taskAttachmentForm, 'file')->fileInput();?>
@@ -59,10 +65,14 @@ use yii\helpers\Html;
         <?php endforeach;?>
     </div>
 
+    <?php Pjax::begin(['enablePushState' => false])?>
     <div class="task-history">
         <div class="comments">
             <h3>Комментарии</h3>
-            <?php $form = ActiveForm::begin(['action' => Url::to(['task/add-comment'])]);?>
+            <?php $form = ActiveForm::begin([
+                    'action' => Url::to(['task/add-comment']),
+                    'options' => ['data' => ['pjax' => true]],
+            ]);?>
             <?=$form->field($taskCommentForm, 'user_id')->hiddenInput(['value' => $userId])->label(false);?>
             <?=$form->field($taskCommentForm, 'task_id')->hiddenInput(['value' => $model->id])->label(false);?>
             <?=$form->field($taskCommentForm, 'comment')->textInput();?>
@@ -78,17 +88,26 @@ use yii\helpers\Html;
         </div>
 
     </div>
+    <?php Pjax::end()?>
 
-
-    <form action="#" name="chat_form" id="chat_form">
-        <label>
-            введите сообщение
-            <input type="text" name="message"/>
-            <input type="submit"/>
-        </label>
-    </form>
+    <div class="online-chat">
+        <h3>Онлайн чат</h3>
+        <form action="#" name="chat_form" id="chat_form">
+            <label>
+                введите сообщение
+                <input type="text" name="message"/>
+                <input type="submit"/>
+            </label>
+        </form>
+    </div>
     <hr>
     <div id="root_chat"></div>
+    <div id="chat_history">
+        <h3>История сообщений онлайн чата</h3>
+        <?php foreach ($chatHistory as $chat): ?>
+            <p><strong><?php echo $chat->message?></strong></p>
+        <?php endforeach;?>
+    </div>
     <script>
         if (!window.WebSocket){
             alert("Ваш браузер неподдерживает веб-сокеты!");
@@ -101,19 +120,19 @@ use yii\helpers\Html;
 /*        var url = 'http://front.yii2:8888/index.php?r=task%2Fone&id=5';
         var id = url.substring(url.lastIndexOf('&id=') + 1);*/
         var task_id = '<?php echo $model->id ?>';
-        var room_id = '<?php echo $model->id ?>';
+        var user_id = '<?php echo $userId ?>';
 
         //alert(id);
 
         document.getElementById("chat_form")
             .addEventListener('submit', function(event){
                 var textMessage = this.message.value;
-                var msg =  {
-                    "task_id" : task_id,
-                    "room_id" : room_id,
-                    "message" : textMessage
+                var data =  {
+                    "chat_channel" : task_id,
+                    "message" : textMessage,
+                    "user_id" : user_id
                 };
-                webSocket.send(JSON.stringify(msg));
+                webSocket.send(JSON.stringify(data));
 
 
                 //webSocket.send(task_id);
