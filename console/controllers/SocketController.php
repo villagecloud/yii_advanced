@@ -5,7 +5,7 @@ use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 use console\components\SocketServer;
-use yii\console\Controller; //не забудьте поменять, если отличается
+use yii\console\Controller;
 
 class SocketController extends Controller
 {

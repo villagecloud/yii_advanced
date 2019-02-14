@@ -3,56 +3,51 @@ namespace console\components;
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
+use common\models\Chat;
 
 class SocketServer implements MessageComponentInterface
 {
     protected $clients;
 
-    private $conversationId;
 
     public function __construct()
     {
-        $this->clients = new \SplObjectStorage;
-        $this->conversationId = null;
+        //$this->clients = new \SplObjectStorage;
+        echo "Server started";
     }
 
     public function onOpen(ConnectionInterface $conn)
     {
-        $this->clients->attach($conn);
-        //var_dump($conn->url);exit;
+        //$this->clients->attach($conn);
+        $urlString = $conn->httpRequest->getUri()->getQuery();
+        $channel = explode("=", $urlString)[1];
+
+        $this->clients[$channel][$conn->resourceId] = $conn;
+
         echo "New connection! ({$conn->resourceId})\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-/*        $data = json_decode($msg, true);
-        if (is_null($data))
-        {
-            echo "invalid data\n";
-            return $from->close();
-        }
-        echo $from->resourceId."\n";*/
-        //var_dump($from);exit;
-        //$request = $from->httpRequest;
-        $json = json_decode($msg, true);
-        $msg = $json['message'];
-        $id = $json['task_id'];
-        $room_id = $json['room_id'];
+        $data = json_decode($msg, true);
+        $chat_id = $data['chat_channel'];
+        $user_id = $data['user_id'];
 
 
         //var_dump($json['message']);
 
         echo "{$from->resourceId}: {$msg}\n";
-        foreach ($this->clients as $client){
-            $client->send($msg);
-            //$client->send($id);
+        (new Chat($data))->save();
+
+        foreach ($this->clients[$chat_id] as $client){
+            $client->send($data['message']);
         }
 
     }
 
     public function onClose(ConnectionInterface $conn)
     {
-        $this->clients->detach($conn);
+        //$this->clients->detach($conn);
         echo "Connection {$conn->resourceId} has disconnected\n";
     }
 
@@ -61,9 +56,4 @@ class SocketServer implements MessageComponentInterface
         echo "An error has occurred: {$e->getMessage()}\n";
         $conn->close();
     }
-
-    public function onTest($id){
-        var_dump($id);
-    }
-
 }
