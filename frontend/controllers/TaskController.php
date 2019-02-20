@@ -136,8 +136,6 @@ class TaskController extends Controller
         }
         $this->redirect(\Yii::$app->request->referrer);
 
-
-
     }
 
 
