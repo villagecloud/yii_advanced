@@ -9,6 +9,7 @@
 namespace console\controllers;
 
 
+use common\models\Task;
 use common\models\TelegramOffset;
 use common\models\TelegramSubscribe;
 use SonkoDmitry\Yii\TelegramBot\Component;
@@ -70,13 +71,14 @@ class TelegramController extends Controller
     {
         $params = explode(" ", $message->getText());
         $command = $params[0];
+        var_dump($command);
         $response = "Unknown command";
         switch($command){
             case '/help':
                 $response = "Доступные команды: \n";
                 $response .= "/help - список комманд\n";
                 $response .= "/project_create ##project_name## -создание нового проекта\n";
-                $response .= "/task_create ##task_name## ##responcible## ##project## -созданпие таска\n";
+                $response .= "/task_create ##task_name## ##responcible## ##project## -создание таска\n";
                 $response .= "/sp_create  - подписка на создание проекты\n";
                 break;
             case "/sp_create":
@@ -89,6 +91,18 @@ class TelegramController extends Controller
                 }else{
                     $response = "error";
                 }
+                break;
+            case "/task_create":
+                $model = new Task([
+                    'manager_id' => 1,
+                    'title' => 'Данный таск создан через телегу!'
+                ]);
+                if($model->save()){
+                    $response = "Таск был успешно создан!";
+                }else{
+                    $response = "Возникла ошибка при создании таска!";
+                }
+                break;
         }
 
         $this->bot->sendMessage($message->getFrom()->getId(), $response);
