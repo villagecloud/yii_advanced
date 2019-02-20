@@ -5,20 +5,20 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "telegram_offset".
+ * This is the model class for table "project".
  *
  * @property int $id
- * @property string $timestamp_offset
+ * @property string $title
+ * @property string $description
  */
-class TelegramOffset extends \yii\db\ActiveRecord
+class Project extends \yii\db\ActiveRecord
 {
-    const CHANNEL_PROJECT_CREATE = "";
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'telegram_offset';
+        return 'project';
     }
 
     /**
@@ -27,8 +27,7 @@ class TelegramOffset extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['timestamp_offset'], 'safe'],
+            [['title', 'description'], 'string', 'max' => 255],
         ];
     }
 
@@ -39,7 +38,8 @@ class TelegramOffset extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'timestamp_offset' => 'Timestamp Offset',
+            'title' => 'Title',
+            'description' => 'Description',
         ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 return [
+    'bootstrap' => ['bootstrap'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -9,6 +10,9 @@ return [
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
+        ],
+        'bootstrap' => [
+            'class' => \common\components\BootstrapComponent::class
         ],
         'bot' => [
             'class' => \SonkoDmitry\Yii\TelegramBot\Component::class,
