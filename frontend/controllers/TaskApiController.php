@@ -38,12 +38,24 @@ class TaskApiController extends ActiveController
     public function actionIndex()
     {
         $month = \Yii::$app->request->get('month');
+        $responsible  = \Yii::$app->request->get('responsible');
+
         $filter = \Yii::$app->request->get('filter');
         //var_dump($month);exit;
         $query = Task::find();
 
         if($filter){
             $query->filterWhere($filter);
+        }
+        if($month){
+            $query->FilterWhere([
+                'MONTH(created_at)' => $month,
+            ]);
+        }
+        if($responsible){
+            $query->FilterWhere([
+                'manager_id' => $responsible,
+            ]);
         }
 
         return new ActiveDataProvider([
