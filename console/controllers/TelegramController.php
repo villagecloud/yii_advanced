@@ -71,7 +71,7 @@ class TelegramController extends Controller
     {
         $params = explode(" ", $message->getText());
         $command = $params[0];
-        var_dump($command);
+        //var_dump($command);
         $response = "Unknown command";
         switch($command){
             case '/help':
