@@ -17,6 +17,17 @@ class m181206_171959_create_project_table extends Migration
             'title' => $this->string(),
             'description' => $this->string()
         ]);
+
+        $this->addColumn('tasks', 'project_id', $this->integer());
+
+        $this->addForeignKey(
+            'fk_projects_tasks',
+            'tasks',
+            'project_id',
+            'project',
+            'id'
+        );
+
     }
 
     /**
