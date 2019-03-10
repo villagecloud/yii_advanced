@@ -1,5 +1,5 @@
 <?php
-/**@var \app\models\Tasks $model */
+/**@var \common\models\Task $model */
 /**@var integer $userId */
 /**@var \app\models\TaskStatuses[] $statusesList */
 /**@var \app\models\Users[] $usersList */
@@ -12,7 +12,7 @@ use yii\widgets\Pjax;
 
 ?>
 
-<?php Pjax::begin(['enablePushState' => false])?>
+<?php //Pjax::begin(['enablePushState' => false])?>
 
 <div class="tasks-edit">
     <div class="task-main">
@@ -32,18 +32,24 @@ use yii\widgets\Pjax;
             </div>
             <div class="col-lg-4">
                 <?=$form->field($model, 'due_date')
-                    ->textInput(['type' => 'date'])?>
+                    ->textInput(['type' => 'date', 'style' => $model->checkDueDate($model->due_date)])?>
             </div>
         </div>
         <div>
             <?=$form->field($model, 'description')
                 ->textarea()?>
         </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <?=$form->field($model, 'closed_date')
+                    ->textInput(['type' => 'datetime', 'readonly' => true])?>
+            </div>
+        </div>
         <?=Html::submitButton("Сохранить",['class' => 'btn btn-success']);?>
         <?php ActiveForm::end();?>
     </div>
 </div>
-<?php Pjax::end()?>
+<?php //Pjax::end()?>
 
 <div class="attachments">
     <h3>Вложения</h3>

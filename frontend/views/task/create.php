@@ -4,11 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Tasks */
+/* @var $model common\models\Tasks */
 /* @var $form yii\widgets\ActiveForm */
+
 ?>
 
 <div class="tasks-form">
+
+    <?php //var_dump($projectId) ?>
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -25,6 +28,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'attachment')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'manager_id')->dropDownList(\common\models\Users::getUsersList()) ?>
+
+    <?=$form->field($model, 'project_id')->hiddenInput(['value' => $projectId])->label(false);?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
