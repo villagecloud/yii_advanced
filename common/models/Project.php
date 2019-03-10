@@ -10,6 +10,8 @@ use Yii;
  * @property int $id
  * @property string $title
  * @property string $description
+ *
+ * @property Tasks[] $tasks
  */
 class Project extends \yii\db\ActiveRecord
 {
@@ -41,5 +43,13 @@ class Project extends \yii\db\ActiveRecord
             'title' => 'Title',
             'description' => 'Description',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTasks()
+    {
+        return $this->hasMany(Task::className(), ['project_id' => 'id']);
     }
 }
