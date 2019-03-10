@@ -13,7 +13,8 @@ use Yii;
  */
 class TelegramSubscribe extends \yii\db\ActiveRecord
 {
-    const CHANNEL_PROJECT_CREATE  = 'projects_create';
+    //const CHANNEL_PROJECT_CREATE  = 'projects_create';
+    const CHANNEL_PROJECT_CREATE  = '';
     /**
      * {@inheritdoc}
      */
