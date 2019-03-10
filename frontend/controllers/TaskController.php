@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Chat;
+use yii\data\ActiveDataProvider;
 use yii\db\Exception;
 use yii\web\ForbiddenHttpException;
 use yii\web\UploadedFile;
@@ -79,7 +80,7 @@ class TaskController extends Controller
         throw New ForbiddenHttpException();
     }*/
     return $this->render('one', [
-        'model' => Tasks::findOne($id),
+        'model' => Task::findOne($id),
         'usersList' => Users::getUsersList(),
         'statusesList' => TaskStatuses::getList(),
         'userId' => Yii::$app->user->id,
@@ -92,23 +93,30 @@ class TaskController extends Controller
 
     public function actionSave($id)
     {
-        if($model = Tasks::findOne($id)){
+        if($model = Task::findOne($id)){
             $model->load(\Yii::$app->request->post());
+
+            if(\Yii::$app->request->bodyParams['Task']['status'] == 6 && $model->closed_date == null)
+            {
+                $model->closed_date = $model->setClosedDate();
+            }
             $model->save();
             \Yii::$app->session->setFlash('success', "Изменеия сохранены");
+
+
         }else {
             \Yii::$app->session->setFlash('error', "Не удалось сохранить изменения");
         }
-        $this->actionOne($id);
-        //$this->redirect(\Yii::$app->request->referrer);
+        //$this->actionOne($id);
+        $this->redirect(\Yii::$app->request->referrer);
     }
 
     public function actionAddComment()
     {
         //TODO: NEED to add permission to user
-       /* if(!Yii::$app->user->can('CommentCreate')){
+        if(!Yii::$app->user->can('CommentCreate')){
             throw new ForbiddenHttpException();
-        }*/
+        }
 
         $model = new Comments();
         if($model->load(\Yii::$app->request->post()) && $model->save()){
@@ -142,15 +150,36 @@ class TaskController extends Controller
     public function actionCreate()
     {
         $model = new Task();
+        $projectId = \Yii::$app->request->post('projectId');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['one', 'id' => $model->id]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+        'model' => $model,
+            'projectId' => $projectId,
+    ]);
+
+    }
+
+    public function actionStats()
+    {
+        $searchModel = new TasksSearch();
+        $closedTasks = $searchModel->search([$searchModel->formName()=>['status' => 6]]);
+
+        $query = Tasks::find()->where('due_date < CURDATE()');
+        $breachedTasks = new ActiveDataProvider([
+            'query' => $query,
         ]);
 
+        $allTasks = Tasks::find()->all();
+
+        return $this->render('statistics', [
+            'closed' => $closedTasks,
+            'breached' => $breachedTasks,
+            'all' => $allTasks,
+        ]);
     }
 
 }
