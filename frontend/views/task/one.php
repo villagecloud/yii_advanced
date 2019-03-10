@@ -44,6 +44,10 @@ use yii\widgets\Pjax;
                 <?=$form->field($model, 'closed_date')
                     ->textInput(['type' => 'datetime', 'readonly' => true])?>
             </div>
+            <div class="col-lg-4">
+                <?=$form->field($model, 'created_at')
+                    ->textInput(['type' => 'datetime', 'readonly' => true])?>
+            </div>
         </div>
         <?=Html::submitButton("Сохранить",['class' => 'btn btn-success']);?>
         <?php ActiveForm::end();?>

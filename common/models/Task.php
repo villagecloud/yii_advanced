@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tasks".
@@ -35,6 +37,16 @@ class Task extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'tasks';
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
     /**
@@ -74,7 +86,7 @@ class Task extends \yii\db\ActiveRecord
             'due_date' => 'Due Date',
             'attachment' => 'Attachment',
             'manager_id' => 'Manager ID',
-            'created_at' => 'Created At',
+            'created_at' => 'Created date',
             'updated_at' => 'Updated At',
             'status' => 'Status',
             'project_id' => 'Project ID',
