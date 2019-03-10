@@ -1,0 +1,11 @@
+suite_namespace: frontend\tests\acceptance
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: 'http://front.yii2:8888'
+            browser: chrome
+            port: 4444
+            #http_proxy: direct
+        - Yii2:
+            part: init

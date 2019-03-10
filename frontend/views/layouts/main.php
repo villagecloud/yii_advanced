@@ -39,6 +39,10 @@ AppAsset::register($this);
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'About', 'url' => ['/site/about']],
         ['label' => 'Contact', 'url' => ['/site/contact']],
+        ['label' => 'Projects', 'url' => ['/project/index']],
+        //['label' => 'Account', 'url' => ['/users'], 'visible' => !Yii::$app->user->isGuest],
+        ['label' => 'All Tasks', 'url' => ['/task'], 'visible' => !Yii::$app->user->isGuest],
+        ['label' => 'Statistics', 'url' => ['/task/stats'], 'visible' => !Yii::$app->user->isGuest],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
@@ -52,7 +56,14 @@ AppAsset::register($this);
             )
             . Html::endForm()
             . '</li>';
-    }
+    };
+    $menuItems[] = [
+        'label' => 'Lang', 'items' =>[
+            ['label' => 'ru', 'url' => ['site/lang', 'lang' => 'ru']],
+            ['label' => 'en', 'url' => ['site/lang', 'lang' => 'en']],
+        ],
+    ];
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
