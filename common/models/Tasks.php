@@ -19,6 +19,7 @@ use yii\db\Expression;
  * @property string $due_date
  * @property string $attachment
  * @property int $manager_id
+ * @property int $status
  *
  * @property Users $manager
  * @property Comments[] $сomments
@@ -62,6 +63,7 @@ class Tasks extends \yii\db\ActiveRecord
             [['manager_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['manager_id' => 'id']],
         ];
     }
+
 
     /**
      * {@inheritdoc}
