@@ -18,5 +18,9 @@ return [
             'class' => \SonkoDmitry\Yii\TelegramBot\Component::class,
             'apiToken' => '782433061:AAH6xYnraOhJWUtE_dAEV2dWXAhjyJikRus',
         ],
+        'authManager' =>[
+            'class' => \yii\rbac\DbManager::class,
+        ],
     ],
+
 ];
